@@ -89,7 +89,7 @@ Balancing the dataset did not show any improvement in prediction performance.
 Some noteworthy observations:
 
 * Threshold from the ROC curve comes to ~0.29
-* On training the Multinomial NB with this data, we obtained a recall of 92%. But the F1 score was ~52%
+* On training the Multinomial NB with these prior probabilities, we obtained a recall of 92%. But the F1 score was ~52%
 * On training different combinations of voting classifiers with one high recall model and one high precision model, it could not beat the AdaBoost model's  F1 score
 
 AdaBoost was used as the production model. The entire dataset was used for fitting the preprocessing pipeline. Subsequently the AdaBoost model was trained on the entire dataset. The preprocessing and model pickle files were written to the disk for use in deployed model.
