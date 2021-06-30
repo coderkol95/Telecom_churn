@@ -100,7 +100,7 @@ if __name__=='__main__':
         custID=dff['CustomerID']
         df.SeniorCitizen=df.SeniorCitizen.apply(lambda x: str(x))       
         
-        with open (r'./bin/final_preprocessing.pkl','rb') as r:
+        with open (r'./bin/preprocessing.pkl','rb') as r:
             preprocess=pickle.load(r)
 
         with open(r'./bin/model.pkl','rb') as a:
