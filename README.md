@@ -64,28 +64,24 @@ These customers are probably young tech savvy thrifty customers who change the s
 
 # Data preparation
 
-Data is split into train and test sets. The overrepresented class(0) is undersampled using `RandomUnderSampler`.
+Data is split into train and test sets
 
 # Model training
 
-Five models were trained: 
-* Support Vector Machine
-* Naive Bayes
-* Logistic Regression
-* Random Forest
+Top 3 models:
 * AdaBoost
+* Logistic Regression
 * Gradient Boosting Machine
 
 # Model evaluation (sample):
 
+I did Hyperparameter tuning for the top 3 models to obtain these results:
+
 Model|	Revenue saved(Rs.)|	Predicted(True positive)(%)|	Missed(False negative)(%)|	F1 score|	ROC_AUC|
 -----|---------------|--------------------------|-----------------------|---------|--------------|
 AdaBoost|	271500|	84.96|	15.04|	0.607595|	0.774779|
-Random Forest|	250000|	84.37|	15.63|	0.602740|	0.770427|
 Gradient Boosting Machine|	228000|	83.19|	16.81|	0.601921|	0.768266|
 Logistic regression|	226500|	83.19|	16.81|	0.601279|	0.767798|
-Naive Bayes|	206000|	86.43|	13.57|	0.571707|	0.748509|
-Support Vector Machine|	204500|	82.01|	17.99|	0.600432|	0.765637|
 
 # Business summary
 
@@ -118,4 +114,4 @@ The model was deployed using streamlit.
 
 As the users won't check for churn of individual customers, a template was provided which could be downloaded and reuploaded after the data was filled in the indicated format. Then the web app would classify each customer if they would churn.
 
-Here's the app! : https://share.streamlit.io/coderkol95/data-science-projects/churn_app.py
+Here's the app! : 
