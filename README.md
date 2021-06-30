@@ -62,9 +62,10 @@ These customers are probably young tech savvy thrifty customers who change the s
 
 * Maximum people who churn do not stream movies or TV, i.e. they are not dependent on the subscription for streamed media consumption.
 
-# Data preparation
+# Data wrangling
 
-Data is split into train and test sets
+The data was split into train and test sets with test size=20%. Column transformers were fit on the training data. The test data was transformed afterwards. The resulting train and test datasets and the column transformers were written out to the disk for use in modelling phase.
+
 
 # Model training
 
@@ -82,6 +83,17 @@ Model|	Revenue saved(Rs.)|	Predicted(True positive)(%)|	Missed(False negative)(%
 AdaBoost|	271500|	84.96|	15.04|	0.607595|	0.774779|
 Gradient Boosting Machine|	228000|	83.19|	16.81|	0.601921|	0.768266|
 Logistic regression|	226500|	83.19|	16.81|	0.601279|	0.767798|
+
+Balancing the dataset did not show any improvement in prediction performance. 
+
+Some noteworthy observations:
+
+* Threshold from the ROC curve comes to ~0.29
+* On training the Multinomial NB with this data, we obtained a recall of 92%. But the F1 score was ~52%
+* On training different combinations of voting classifiers with one high recall model and one high precision model, it could not beat the AdaBoost model's  F1 score
+
+AdaBoost was used as the production model. The entire dataset was used for fitting the preprocessing pipeline. Subsequently the AdaBoost model was trained on the entire dataset. The preprocessing and model pickle files were written to the disk for use in deployed model.
+
 
 # Business summary
 
@@ -112,6 +124,6 @@ Our 'AdaBoost Classifier' model saves us Rs.857167 on an average compared to a r
 
 The model was deployed using streamlit.
 
-As the users won't check for churn of individual customers, a template was provided which could be downloaded and reuploaded after the data was filled in the indicated format. Then the web app would classify each customer if they would churn.
+As the users won't check for churn of individual customers, a template was provided which could be downloaded and reuploaded after the data was filled in the indicated format. The input data was transformed with the already fitted pipeline. Then the model was used to predict the output.
 
-Here's the app! : 
+Here's the app! : https://share.streamlit.io/coderkol95/telecom_churn/src/churn_app.py
