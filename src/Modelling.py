@@ -7,8 +7,9 @@ from hyperopt.pyll import scope
 from functools import partial
 from sklearn.metrics import recall_score, precision_score,accuracy_score,f1_score
 import pickle
-
-
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
 """
 
 Modelling:
@@ -22,7 +23,7 @@ Here AdaBoost is being trained on the whole dataset for deployment.
 """
 
 #Reading the dataset
-dataset = pd.read_csv(r"./data/dataset.csv")
+dataset = pd.read_csv(r"./Customer_churn/data/dataset.csv")
 
 #Splitting the dataset into features and target
 X = dataset.iloc[:,:-1]
@@ -39,8 +40,8 @@ def optimize(X,y,params):
 
 #Hyperparameters to be tuned
 param_space_gb =  {
-        'learning_rate': hp.uniform('lr',0.01,1),
-        'n_estimators': scope.int(hp.quniform('trees',50,1000,1))
+        'learning_rate': hp.uniform('lr',0.51,1),
+        'n_estimators': scope.int(hp.quniform('trees',50,100,1))
 }
 
 #To store the results of the trials
@@ -59,10 +60,12 @@ result = fmin(
 )
 
 print(result)
-#model = AdaBoostClassifier(learning_rate= result['lr'], n_estimators= int(result['trees']))
-model = AdaBoostClassifier(learning_rate= 0.877214687401072, n_estimators=62)                   #These were obtained as the best results. Running it repeatedly causes computation overhead.
+#model = AdaBoostClassifier(learning_rate= result['lr'], n_estimators= int(result['trees']), random_state=123)
+model = AdaBoostClassifier(learning_rate= 0.906404580885759, n_estimators=81)     
+#These were obtained as the best results. Running it repeatedly causes computation overhead.
+# f1 score: 0.6024
 
 model.fit(X,y)
 
-with open(r'./bin/model.pkl','wb') as r:
+with open(r'./Customer_churn//bin/model.pkl','wb') as r:
     pickle.dump(model, r)
