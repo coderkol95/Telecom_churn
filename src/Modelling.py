@@ -32,7 +32,14 @@ y = dataset.iloc[:,-1]
 
 #The function to be optimized by the HyperOpt
 def optimize(X,y,params):
-
+    
+    """
+    Objectives
+    1. Initialize model with received params
+    2. For the 5 splits, fit it on the train and score it on the test
+    3. Calculate the mean F1 score across the splits and return it 
+    
+    """  
     s=StratifiedKFold(n_splits=5)
     mod = AdaBoostClassifier(**params)
     score=cross_val_score(mod,X,y,scoring='f1',cv=s).mean()    
@@ -44,7 +51,7 @@ param_space_gb =  {
         'n_estimators': scope.int(hp.quniform('trees',50,100,1))
 }
 
-#To store the results of the trials
+#To initialize trials
 trials=Trials()
 
 #The optimization function
