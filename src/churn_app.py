@@ -57,19 +57,18 @@ def uploader():
     else:
         st.markdown("Waiting for your input...(You can find a filled template at my [github](https://github.com/coderkol95/Data-science-projects/blob/master/Customer_churn/Data/Telco-Customer-Churn.csv) repo.)",unsafe_allow_html=True)    
 
-"""
+###############################################################################
+# __main__():
+#
+# 1. Wait till the user uploads the excel and its received in a dataframe
+# 2. Store the customer ID
+# 3. Convert seniorcitizen column to string if not 
+# 4. Generate new features based on already fitted pipeline
+# 5. Predict the output on the basis of already fitted model!
+# 6. Concatenate the output with the previously stored customer ID
+# 7. Print the result to the console
 
-__main__():
-
-1. Wait till the user uploads the excel and its received in a dataframe
-2. Store the customer ID
-3. Convert seniorcitizen column to string if not 
-4. Generate new features based on already fitted pipeline
-5. Predict the output on the basis of already fitted model!
-6. Concatenate the output with the previously stored customer ID
-7. Print the result to the console
-
-"""  
+###############################################################################
 
 if __name__=='__main__':
   
