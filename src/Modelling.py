@@ -29,7 +29,6 @@ dataset = pd.read_csv(r"./Customer_churn/data/dataset.csv")
 X = dataset.iloc[:,:-1]
 y = dataset.iloc[:,-1]
 
-
 #The function to be optimized by the HyperOpt
 def optimize(params):
     
@@ -74,7 +73,7 @@ model = AdaBoostClassifier(**result)
 
 model = AdaBoostClassifier(learning_rate = 0.888624248987685, n_estimators=56)   
 # f1 score: 0.6039
-'''
+''' 
 model.fit(X,y)
 
 with open(r'./Customer_churn//bin/model.pkl','wb') as r:
