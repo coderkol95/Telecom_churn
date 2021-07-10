@@ -69,8 +69,7 @@ result = fmin(
 
 print(result)
 
-model = AdaBoostClassifier(**result) 
-
+#model = AdaBoostClassifier(learning_rate = result['learning_rate'], n_estimators=result['n_estimators']) 
 model = AdaBoostClassifier(learning_rate = 0.888624248987685, n_estimators=56)   
 # f1 score: 0.6039
 ''' 
