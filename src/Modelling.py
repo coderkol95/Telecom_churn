@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import cross_val_score, cross_validate
 from sklearn.ensemble import AdaBoostClassifier
-from hyperopt import hp, fmin, tpe, Trials
+from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
 from hyperopt.pyll import scope
 from functools import partial
 from sklearn.metrics import recall_score, precision_score,accuracy_score,f1_score
@@ -31,7 +31,7 @@ y = dataset.iloc[:,-1]
 
 
 #The function to be optimized by the HyperOpt
-def optimize(X,y,params):
+def optimize(params):
     
     """
     Objectives
@@ -47,32 +47,36 @@ def optimize(X,y,params):
 
 #Hyperparameters to be tuned
 param_space_gb =  {
-        'learning_rate': hp.uniform('lr',0.51,1),
-        'n_estimators': scope.int(hp.quniform('trees',50,100,1))
+        'learning_rate': hp.uniform('learning_rate',0.01,1),
+        'n_estimators': scope.int(hp.quniform('n_estimators',10,500,1))
 }
 
 #To initialize trials
 trials=Trials()
 
 #The optimization function
-optimization_function= partial(optimize,X,y)
+def score_hyperparams(params):
+    score=optimize(params)
+    return {'loss':score, 'status':STATUS_OK}
 
 #The final assessment
 result = fmin(
-    fn=optimization_function,
-    max_evals=20,
+    fn=score_hyperparams,
+    max_evals=50,
     space=param_space_gb,
     trials=trials,
     algo=tpe.suggest
 )
 
 print(result)
-#model = AdaBoostClassifier(learning_rate= result['lr'], n_estimators= int(result['trees']), random_state=123)
-model = AdaBoostClassifier(learning_rate= 0.906404580885759, n_estimators=81)     
-#These were obtained as the best results. Running it repeatedly causes computation overhead.
-# f1 score: 0.6024
 
+model = AdaBoostClassifier(**result) 
+
+model = AdaBoostClassifier(learning_rate = 0.888624248987685, n_estimators=56)   
+# f1 score: 0.6039
+'''
 model.fit(X,y)
 
 with open(r'./Customer_churn//bin/model.pkl','wb') as r:
     pickle.dump(model, r)
+'''
