@@ -55,7 +55,7 @@ def uploader():
         return dff
 
     else:
-        st.markdown("Waiting for your input...(You can find a filled template at my [github](https://github.com/coderkol95/Data-science-projects/blob/master/Customer_churn/Data/Telco-Customer-Churn.csv) repo.)",unsafe_allow_html=True)    
+        st.markdown("Waiting for your input...(You can find a filled template at my [github](https://github.com/coderkol95/Telecom_churn) repo.)",unsafe_allow_html=True)    
 
 ###############################################################################
 # __main__():
