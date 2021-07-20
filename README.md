@@ -120,6 +120,15 @@ Extra cost to prevent churn within random 50.0% of the customers = Rs.585667
 Our 'AdaBoost Classifier' model saves us Rs.857167 on an average compared to a random selection of 50% customers
 
 
+# Business recommendations
+
+Young tech savvy people churn more often. We need to capture the following data about the customers to build segments and be able to predict churn more precisely:
+
+* Age
+* The earning potential or the salary
+* Devices used(for e.g.: whether the person uses a Xiaomi phone or an iPhone; a Windows or a Macintosh)
+  
+
 # Deployment
 
 The model was deployed using streamlit.
