@@ -21,7 +21,8 @@ categorical_feat = [ col for col in df.select_dtypes('object').columns.to_list()
 #Removing the target variable
 binary_feat.remove('Churn')
 
-#Creating a column transformer
+# Creating a column transformer
+# There were no outliers in TotalCharges, MonthlyCharges and tenure, so used MinMaxScaler instead of StandardScaler
 preprocessing = CT(
                     transformers=[
                         ('numeric_scaling', MinMaxScaler(), numeric_feat),
