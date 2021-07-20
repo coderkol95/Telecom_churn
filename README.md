@@ -71,8 +71,8 @@ The data was split into train and test sets with test size=20%. Column transform
 
 Top 3 models:
 * AdaBoost
-* Logistic Regression
 * Gradient Boosting Machine
+* Logistic Regression
 
 # Model evaluation (sample):
 
@@ -90,7 +90,7 @@ Some noteworthy observations:
 
 * Threshold from the ROC curve comes to ~0.29
 * On training the Multinomial NB with these prior probabilities, we obtained a recall of 92%. But the F1 score was ~52%
-* On training different combinations of voting classifiers with one high recall model and one high precision model, it could not beat the AdaBoost model's  F1 score
+* On stacking different combinations of classifiers with high recall and high precision model(s), it could not beat the AdaBoost model's  F1 score
 
 AdaBoost was used as the production model. The entire dataset was used for fitting the preprocessing pipeline. Subsequently the AdaBoost model was trained on the entire dataset. The preprocessing and model pickle files were written to the disk for use in deployed model.
 
@@ -124,6 +124,6 @@ Our 'AdaBoost Classifier' model saves us Rs.857167 on an average compared to a r
 
 The model was deployed using streamlit.
 
-As the users won't check for churn of individual customers, a template was provided which could be downloaded and reuploaded after the data was filled in the indicated format. The input data was transformed with the already fitted pipeline. Then the model was used to predict the output.
+As the users won't check for churn of individual customers, a template was provided which could be downloaded and uploaded after the data was filled in the indicated format. The input data was transformed with the already fitted pipeline. Then the model was used to predict the output.
 
 Here's the app! : https://share.streamlit.io/coderkol95/telecom_churn/src/churn_app.py
