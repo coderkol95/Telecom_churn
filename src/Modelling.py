@@ -1,15 +1,12 @@
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import cross_val_score, cross_validate
+from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import AdaBoostClassifier
 from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
 from hyperopt.pyll import scope
-from functools import partial
 from sklearn.metrics import recall_score, precision_score,accuracy_score,f1_score
 import pickle
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import SVC
+
 """
 
 Modelling:
@@ -57,7 +54,7 @@ trials=Trials()
 def score_hyperparams(params):
     score=optimize(params)
     return {'loss':score, 'status':STATUS_OK}
-
++
 #The final assessment
 result = fmin(
     fn=score_hyperparams,
