@@ -164,7 +164,7 @@ if __name__=='__main__':
                 out.reset_index(inplace=True)
                 
                 filename = 'churn-predictions.xlsx'
-                download_button_str = download_button(out, filename, f'Downlaod churn-predictions', pickle_it=False)
+                download_button_str = download_button(out, filename, f'Download churn-predictions', pickle_it=False)
                 st.markdown(download_button_str, unsafe_allow_html=True)
 
             except:
