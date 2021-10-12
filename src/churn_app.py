@@ -109,10 +109,9 @@ if __name__=='__main__':
         out.index.name='Customer ID'
         out['Likely to churn'].astype('bool')
         st.write(out)
-
+        out.reset_index(inplace=True)
         download=st.button('Download Excel File')
         if download:
-            'Download Started!'
             csv = out.to_csv(index=False)
             b64 = base64.b64encode(csv.encode()).decode()  # some strings
             linko= f'<a href="data:file/csv;base64,{b64}" download="churn_prediction.csv">Download churn prediction</a>'
