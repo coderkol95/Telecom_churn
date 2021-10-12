@@ -11,7 +11,7 @@ Although the customers have churned, their data is still available. Through mach
 Our goal in this project is to identify behavior among customers who are likely to churn. Subsequent to that we need to train a machine learning model to identify these signals from a customer before they churn. Once deployed, our model will identify customers who might churn and alert us to take necessary steps to prevent their churn.
 
 
-#Directory structure:
+# Directory structure:
 
     customer_churn/
         bin/
