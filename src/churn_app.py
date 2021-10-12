@@ -113,5 +113,8 @@ if __name__=='__main__':
         download=st.button('Download Excel File')
         if download:
             'Download Started!'
-            df_download= out
+            csv = out.to_csv(index=False)
+            b64 = base64.b64encode(csv.encode()).decode()  # some strings
+            linko= f'<a href="data:file/csv;base64,{b64}" download="churn_prediction.csv">Download churn prediction</a>'
+            st.markdown(linko, unsafe_allow_html=True)
 
