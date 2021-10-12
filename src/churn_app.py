@@ -8,45 +8,87 @@ import uuid
 import json
 import io
 
-def to_excel(df):
+def download_button(object_to_download, download_filename, button_text, pickle_it=False):
     """
-    Accepts a dataframe and outputs an excel file.
-
+    Generates a link to download the given object_to_download.
+    Params:
+    ------
+    object_to_download:  The object to be downloaded.
+    download_filename (str): filename and extension of file. e.g. mydata.csv,
+    some_txt_output.txt download_link_text (str): Text to display for download
+    link.
+    button_text (str): Text to display on download button (e.g. 'click here to download file')
+    pickle_it (bool): If True, pickle file.
+    Returns:
+    -------
+    (str): the anchor tag to download object_to_download
+    Examples:
+    --------
+    download_link(your_df, 'YOUR_DF.csv', 'Click to download data!')
+    download_link(your_str, 'YOUR_STRING.txt', 'Click to download text!')
     """
+    if pickle_it:
+        try:
+            object_to_download = pickle.dumps(object_to_download)
+        except pickle.PicklingError as e:
+            st.write(e)
+            return None
 
-    output = BytesIO()
-    # Create a Pandas Excel writer using XlsxWriter as the engine.
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, sheet_name='Sheet1',index=False)
-    
-    # Close the Pandas Excel writer and output the Excel file.
-    writer.save()
+    else:
+        if isinstance(object_to_download, bytes):
+            pass
 
-    processed_data = output.getvalue()
-    return processed_data
+        elif isinstance(object_to_download, pd.DataFrame):
+            #object_to_download = object_to_download.to_csv(index=False)
+            towrite = io.BytesIO()
+            object_to_download = object_to_download.to_excel(towrite, encoding='utf-8', index=False, header=True)
+            towrite.seek(0)
 
-def get_table_download_link(df):
-    """
-    Generates a link allowing the data in a given panda dataframe to be downloaded.
-    in:  dataframe
-    out: href string
+        # Try JSON encode for everything else
+        else:
+            object_to_download = json.dumps(object_to_download)
 
-    """
-    val = to_excel(df)              #Getting the dataframe in an excel
-    b64 = base64.b64encode(val)  # val looks like b'...'
-    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="churn_template.csv">Download template for uploading</a>' # decode b'abc' => abc
+    try:
+        # some strings <-> bytes conversions necessary here
+        b64 = base64.b64encode(object_to_download.encode()).decode()
 
-def get_saved_table_download_link(df):
-    """
-    Generates a link allowing the data in a given panda dataframe to be downloaded.
-    in:  dataframe
-    out: href string
+    except AttributeError as e:
+        b64 = base64.b64encode(towrite.read()).decode()
 
-    """
-    val = to_excel(df)              #Getting the dataframe in an excel
-    b64 = base64.b64encode(val)  # val looks like b'...'
-    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="churn_predictions.csv">Download churn predictions</a>' # decode b'abc' => abc
+    button_uuid = str(uuid.uuid4()).replace('-', '')
+    button_id = re.sub('\d+', '', button_uuid)
 
+    custom_css = f""" 
+        <style>
+            #{button_id} {{
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgb(255, 255, 255);
+                color: rgb(38, 39, 48);
+                padding: .25rem .75rem;
+                position: relative;
+                text-decoration: none;
+                border-radius: 4px;
+                border-width: 1px;
+                border-style: solid;
+                border-color: rgb(230, 234, 241);
+                border-image: initial;
+            }} 
+            #{button_id}:hover {{
+                border-color: rgb(246, 51, 102);
+                color: rgb(246, 51, 102);
+            }}
+            #{button_id}:active {{
+                box-shadow: none;
+                background-color: rgb(246, 51, 102);
+                color: white;
+                }}
+        </style> """
+
+    dl_link = custom_css + f'<a download="{download_filename}" id="{button_id}" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}">{button_text}</a><br></br>'
+
+    return dl_link
 
 
 def uploader():
@@ -61,8 +103,12 @@ def uploader():
     vals = [0,'Male/Female','Yes/No','Yes/No','Yes/No',123,'Yes/No','Yes/No/No phone service','DSL/Fibre optic/No','Yes/No/No internet sevice','Yes/No/No internet sevice','Yes/No/No internet sevice','Yes/No/No internet sevice','Yes/No/No internet sevice','Yes/No/No internet sevice','Month-to-month/One year/Two year','Yes/No','Electronic check/Mailed check/Bank transfer (automatic)/Credit card (automatic)',123,123]
     d= pd.Series(vals, index=['CustomerID','gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure(months)','PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity','OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV','StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod','MonthlyCharges(Rs.)', 'TotalCharges(Rs.)'])
     d=pd.DataFrame(d).transpose()
-    
-    st.markdown(get_table_download_link(d), unsafe_allow_html=True)
+
+
+    filename = 'churn-prediction-format.xlsx'
+    download_button_str = download_button(out, filename, f'Click here to download churn-prediction-format', pickle_it=False)
+    st.markdown(download_button_str, unsafe_allow_html=True)
+
     uploaded_file=st.file_uploader("Please upload data in the provided format")
     
     if uploaded_file is not None:
@@ -113,97 +159,7 @@ if __name__=='__main__':
         out['Likely to churn'].astype('bool')
         st.write(out)
         out.reset_index(inplace=True)
-        # download=st.button('Download Excel File')
-        # if download:
-        #     csv = out.to_csv(index=False)
-        #     b64 = base64.b64encode(csv.encode()).decode()  # some strings
-        #     linko= f'<a href="data:file/csv;base64,{b64}" download="churn_prediction.csv">Download churn prediction</a>'
-        #     st.markdown(linko, unsafe_allow_html=True)
-
         
-        def download_button(object_to_download, download_filename, button_text, pickle_it=False):
-            """
-            Generates a link to download the given object_to_download.
-            Params:
-            ------
-            object_to_download:  The object to be downloaded.
-            download_filename (str): filename and extension of file. e.g. mydata.csv,
-            some_txt_output.txt download_link_text (str): Text to display for download
-            link.
-            button_text (str): Text to display on download button (e.g. 'click here to download file')
-            pickle_it (bool): If True, pickle file.
-            Returns:
-            -------
-            (str): the anchor tag to download object_to_download
-            Examples:
-            --------
-            download_link(your_df, 'YOUR_DF.csv', 'Click to download data!')
-            download_link(your_str, 'YOUR_STRING.txt', 'Click to download text!')
-            """
-            if pickle_it:
-                try:
-                    object_to_download = pickle.dumps(object_to_download)
-                except pickle.PicklingError as e:
-                    st.write(e)
-                    return None
-
-            else:
-                if isinstance(object_to_download, bytes):
-                    pass
-
-                elif isinstance(object_to_download, pd.DataFrame):
-                    #object_to_download = object_to_download.to_csv(index=False)
-                    towrite = io.BytesIO()
-                    object_to_download = object_to_download.to_excel(towrite, encoding='utf-8', index=False, header=True)
-                    towrite.seek(0)
-
-                # Try JSON encode for everything else
-                else:
-                    object_to_download = json.dumps(object_to_download)
-
-            try:
-                # some strings <-> bytes conversions necessary here
-                b64 = base64.b64encode(object_to_download.encode()).decode()
-
-            except AttributeError as e:
-                b64 = base64.b64encode(towrite.read()).decode()
-
-            button_uuid = str(uuid.uuid4()).replace('-', '')
-            button_id = re.sub('\d+', '', button_uuid)
-
-            custom_css = f""" 
-                <style>
-                    #{button_id} {{
-                        display: inline-flex;
-                        align-items: center;
-                        justify-content: center;
-                        background-color: rgb(255, 255, 255);
-                        color: rgb(38, 39, 48);
-                        padding: .25rem .75rem;
-                        position: relative;
-                        text-decoration: none;
-                        border-radius: 4px;
-                        border-width: 1px;
-                        border-style: solid;
-                        border-color: rgb(230, 234, 241);
-                        border-image: initial;
-                    }} 
-                    #{button_id}:hover {{
-                        border-color: rgb(246, 51, 102);
-                        color: rgb(246, 51, 102);
-                    }}
-                    #{button_id}:active {{
-                        box-shadow: none;
-                        background-color: rgb(246, 51, 102);
-                        color: white;
-                        }}
-                </style> """
-
-            dl_link = custom_css + f'<a download="{download_filename}" id="{button_id}" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}">{button_text}</a><br></br>'
-
-            return dl_link
-
-
         filename = 'churn-predictions.xlsx'
         download_button_str = download_button(out, filename, f'Click here to download churn-predictions', pickle_it=False)
         st.markdown(download_button_str, unsafe_allow_html=True)
