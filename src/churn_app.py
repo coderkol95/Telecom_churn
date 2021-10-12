@@ -106,7 +106,7 @@ def uploader():
 
 
     filename = 'churn-prediction-format.xlsx'
-    download_button_str = download_button(d, filename, f'Click here to download churn-prediction-format', pickle_it=False)
+    download_button_str = download_button(d, filename, f'Churn-prediction-format', pickle_it=False)
     st.markdown(download_button_str, unsafe_allow_html=True)
 
     uploaded_file=st.file_uploader("Please upload data in the provided format")
@@ -164,7 +164,7 @@ if __name__=='__main__':
                 out.reset_index(inplace=True)
                 
                 filename = 'churn-predictions.xlsx'
-                download_button_str = download_button(out, filename, f'Click here to download churn-predictions', pickle_it=False)
+                download_button_str = download_button(out, filename, f'Churn-predictions', pickle_it=False)
                 st.markdown(download_button_str, unsafe_allow_html=True)
 
             except:
