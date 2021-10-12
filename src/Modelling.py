@@ -20,7 +20,7 @@ Here AdaBoost is being trained on the whole dataset for deployment.
 """
 
 #Reading the dataset
-dataset = pd.read_csv(r"./Customer_churn/data/dataset.csv")
+dataset = pd.read_csv(r"./data/dataset.csv")
 
 #Splitting the dataset into features and target
 X = dataset.iloc[:,:-1]
@@ -54,7 +54,7 @@ trials=Trials()
 def score_hyperparams(params):
     score=optimize(params)
     return {'loss':score, 'status':STATUS_OK}
-+
+
 #The final assessment
 result = fmin(
     fn=score_hyperparams,
@@ -66,12 +66,11 @@ result = fmin(
 
 print(result)
 
-#model = AdaBoostClassifier(learning_rate = result['learning_rate'], n_estimators=result['n_estimators']) 
-model = AdaBoostClassifier(learning_rate = 0.888624248987685, n_estimators=56)   
+model = AdaBoostClassifier(learning_rate = result['learning_rate'], n_estimators=int(result['n_estimators'])) 
+# model = AdaBoostClassifier(learning_rate = 0.888624248987685, n_estimators=56)   
 # f1 score: 0.6039
-''' 
+
 model.fit(X,y)
 
-with open(r'./Customer_churn//bin/model.pkl','wb') as r:
+with open(r'./bin/model.pkl','wb') as r:
     pickle.dump(model, r)
-'''
