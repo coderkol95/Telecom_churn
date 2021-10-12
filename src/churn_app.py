@@ -33,6 +33,19 @@ def get_table_download_link(df):
     b64 = base64.b64encode(val)  # val looks like b'...'
     return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="churn_template.csv">Download template for uploading</a>' # decode b'abc' => abc
 
+def get_saved_table_download_link(df):
+    """
+    Generates a link allowing the data in a given panda dataframe to be downloaded.
+    in:  dataframe
+    out: href string
+
+    """
+    val = to_excel(df)              #Getting the dataframe in an excel
+    b64 = base64.b64encode(val)  # val looks like b'...'
+    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="churn_predictions.csv">Download churn predictions</a>' # decode b'abc' => abc
+
+
+
 def uploader():
     """
 
@@ -96,4 +109,9 @@ if __name__=='__main__':
         out.index.name='Customer ID'
         out['Likely to churn'].astype('bool')
         st.write(out)
+
+        download=st.button('Download Excel File')
+        if download:
+            'Download Started!'
+            df_download= out
 
