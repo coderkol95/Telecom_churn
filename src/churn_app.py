@@ -139,27 +139,37 @@ if __name__=='__main__':
     df=uploader()
     if df is not None:
         
-        custID=df['CustomerID']
-        df.drop(['CustomerID'],axis=1,inplace=True)
+        try:
+            custID=df['CustomerID']
+            df.drop(['CustomerID'],axis=1,inplace=True)
         
-        df.SeniorCitizen=df.SeniorCitizen.apply(lambda x: str(x))       
-        
-        with open (r'./bin/preprocessing.pkl','rb') as r:
-            preprocess=pickle.load(r)
+            df.SeniorCitizen=df.SeniorCitizen.apply(lambda x: str(x))       
 
-        with open(r'./bin/model.pkl','rb') as a:
-            model=pickle.load(a)
 
-        model_frame=preprocess.transform(df)
+            try:
+                with open (r'./bin/preprocessing.pkl','rb') as r:
+                    preprocess=pickle.load(r)
 
-        y=model.predict(model_frame)
-        out=pd.DataFrame(y,index=custID)
-        out.columns=['Likely to churn']
-        out.index.name='Customer ID'
-        out['Likely to churn'].astype('bool')
-        st.write(out)
-        out.reset_index(inplace=True)
-        
-        filename = 'churn-predictions.xlsx'
-        download_button_str = download_button(out, filename, f'Click here to download churn-predictions', pickle_it=False)
-        st.markdown(download_button_str, unsafe_allow_html=True)
+                with open(r'./bin/model.pkl','rb') as a:
+                    model=pickle.load(a)
+
+                model_frame=preprocess.transform(df)
+                y=model.predict(model_frame)
+                
+                out=pd.DataFrame(y,index=custID)
+                out.columns=['Likely to churn']
+                out.index.name='Customer ID'
+                out['Likely to churn'].astype('bool')
+                st.write(out)
+                out.reset_index(inplace=True)
+                
+                filename = 'churn-predictions.xlsx'
+                download_button_str = download_button(out, filename, f'Click here to download churn-predictions', pickle_it=False)
+                st.markdown(download_button_str, unsafe_allow_html=True)
+
+            except:
+                st.write('Internal error. Please contact Anupam.')
+
+        except:
+
+            st.write('The data has not been entered correctly in the template.')
