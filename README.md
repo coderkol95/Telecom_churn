@@ -11,6 +11,34 @@ Although the customers have churned, their data is still available. Through mach
 Our goal in this project is to identify behavior among customers who are likely to churn. Subsequent to that we need to train a machine learning model to identify these signals from a customer before they churn. Once deployed, our model will identify customers who might churn and alert us to take necessary steps to prevent their churn.
 
 
+# Directory structure:
+
+    customer_churn/
+        bin/
+            model.pkl
+            preprocessing.pkl
+
+        data/
+            dataset.csv
+            img.png
+            img2.png
+            payment.png
+            personal_factors.png
+            Telco-Customer-Churn.csv
+            test.csv
+            train.csv
+        
+        src/
+            churn_app.py
+            Data_exploration.ipynb
+            Modelling.py
+            Preprocessing.py
+        
+        churn_template.xlsx
+        LICENSE
+        README.md
+        requirements.txt
+
 # Data exploration
 
 ## ![Personal factors](https://i.ibb.co/5LqNr02/personal-factors.png)
