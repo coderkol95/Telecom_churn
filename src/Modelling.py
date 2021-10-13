@@ -58,7 +58,7 @@ def score_hyperparams(params):
 #The final assessment
 result = fmin(
     fn=score_hyperparams,
-    max_evals=50,
+    max_evals=10,
     space=param_space_gb,
     trials=trials,
     algo=tpe.suggest
