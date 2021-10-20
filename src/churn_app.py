@@ -151,8 +151,7 @@ if __name__=='__main__':
                 
                 out=pd.DataFrame(y,index=custID)
                 out.columns=['Likely to churn']
-                out['Likely to churn'].astype('str')
-                out['Likely to churn'] = out['Likely to churn'].replace({'1':'Yes','0':'No'})
+                out.replace({'Likely to churn':{1:'Yes',0:'No'}}, inplace=True)
                 out.index.name='Customer ID'
                 st.write(out)
                 out.reset_index(inplace=True)
