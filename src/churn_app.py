@@ -151,6 +151,7 @@ if __name__=='__main__':
                 
                 out=pd.DataFrame(y,index=custID)
                 out.columns=['Likely to churn']
+                out['Likely to churn'].replace({'1':'Yes','0':'No'}, inplace=True)
                 out.index.name='Customer ID'
                 out['Likely to churn'].astype('bool')
                 st.write(out)
